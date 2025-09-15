@@ -102,14 +102,14 @@ const CSVUpload: React.FC = () => {
     return isNaN(parsed) ? 0 : parsed;
   };
 
-  const calculateMissingRates = (data: SQPRData[]): SQPRData[] => {
+  const calculateMissingRates = useCallback((data: SQPRData[]): SQPRData[] => {
     return data.map(row => {
       // Convert string values to numbers
       const impressions = convertToNumber(row['Impressions: Total Count']);
       const clicks = convertToNumber(row['Clicks: Total Count']);
       const basketAdds = convertToNumber(row['Basket Adds: Total Count']);
       const purchases = convertToNumber(row['Purchases: Total Count']);
-      
+
       return {
         ...row,
         // Ensure all numeric fields are properly converted
@@ -128,7 +128,7 @@ const CSVUpload: React.FC = () => {
         'Purchases: Purchase Rate %': convertToNumber(row['Purchases: Purchase Rate %']) || safeCalculate(purchases, basketAdds),
       };
     });
-  };
+  }, []);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
